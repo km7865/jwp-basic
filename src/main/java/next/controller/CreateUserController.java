@@ -1,8 +1,9 @@
 package next.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import next.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,13 @@ public class CreateUserController implements Controller {
                 req.getParameter("email"));
         log.debug("User : {}", user);
 
-        DataBase.addUser(user);
+        UserDao dao = new UserDao();
+        try {
+            dao.insert(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         return "redirect:/";
     }
 }

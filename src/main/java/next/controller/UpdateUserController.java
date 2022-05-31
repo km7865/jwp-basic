@@ -1,8 +1,10 @@
 package next.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
+import next.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,8 @@ public class UpdateUserController implements Controller {
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        User user = DataBase.findUserById(req.getParameter("userId"));
+        UserDao dao = new UserDao();
+        User user = dao.findByUserId(req.getParameter("userId"));
         if (!UserSessionUtils.isSameUser(req.getSession(), user)) {
             throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
@@ -23,7 +26,7 @@ public class UpdateUserController implements Controller {
         User updateUser = new User(req.getParameter("userId"), req.getParameter("password"), req.getParameter("name"),
                 req.getParameter("email"));
         log.debug("Update User : {}", updateUser);
-        user.update(updateUser);
+        dao.update(updateUser);
         return "redirect:/";
     }
 }
