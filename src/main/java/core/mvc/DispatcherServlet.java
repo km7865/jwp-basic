@@ -27,7 +27,7 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         String requestUri = req.getRequestURI();
         logger.debug("Method : {}, Request URI : {}", req.getMethod(), requestUri);
 
@@ -36,7 +36,7 @@ public class DispatcherServlet extends HttpServlet {
             String viewName = controller.execute(req, resp);
             move(viewName, req, resp);
         } catch (Throwable e) {
-            logger.error("Exception : {}", e);
+            logger.error("Exception : {}", e.getMessage());
             throw new ServletException(e.getMessage());
         }
     }
@@ -47,7 +47,6 @@ public class DispatcherServlet extends HttpServlet {
             resp.sendRedirect(viewName.substring(DEFAULT_REDIRECT_PREFIX.length()));
             return;
         }
-
         RequestDispatcher rd = req.getRequestDispatcher(viewName);
         rd.forward(req, resp);
     }

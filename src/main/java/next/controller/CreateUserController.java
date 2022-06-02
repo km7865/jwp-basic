@@ -22,6 +22,7 @@ public class CreateUserController implements Controller {
 
         UserDao userDao = new UserDao();
         userDao.insert(user);
+
         return "redirect:/";
     }
 }

@@ -10,6 +10,7 @@ CREATE TABLE USERS (
 );
 
 INSERT INTO USERS VALUES('admin', 'password', '자바지기', 'admin@slipp.net');
+INSERT INTO USERS VALUES('a', 'a', 'a', 'a@a');
 
 DROP TABLE IF EXISTS QUESTIONS;
 
@@ -66,10 +67,7 @@ CURRENT_TIMESTAMP(), 0);
 INSERT INTO QUESTIONS (questionId, writer, title, contents, createdDate, countOfAnswer) VALUES
 (5, 'johnburr',
 '이클립스 JRE설정에 대해서 질문을 드립니다.', 
-'이곳에서 보면 이클립스의 jre에 대해서 3개의 설정이 나옵니다.
-jre 버전 설정
-실행환경 설정(execution environment)
-컴파일러 설정',
+'이곳에서 보면 이클립스의 jre에 대해서 3개의 설정이 나옵니다. jre 버전 설정 실행환경 설정(execution environment) 컴파일러 설정',
 CURRENT_TIMESTAMP(), 0);
 
 INSERT INTO QUESTIONS (questionId, writer, title, contents, createdDate, countOfAnswer) VALUES
