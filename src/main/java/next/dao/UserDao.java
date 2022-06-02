@@ -28,7 +28,9 @@ public class UserDao {
             pstmt.setString(4, user.getEmail());
         });
 
-        template.update("INSERT INTO USERS VALUES (?, ?, ?, ?)", setter);
+        // pss, 가변인자
+        // template.update("INSERT INTO USERS VALUES (?, ?, ?, ?)", setter);
+        template.update("INSERT INTO USERS VALUES (?, ?, ?, ?)", user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public void update(User user) throws SQLException {
@@ -45,18 +47,15 @@ public class UserDao {
 
     public List<User> findAll() throws SQLException {
         JDBCTemplate<User> template = new JDBCTemplate<>();
-        RowMapper<User> mapper = (rs -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                users.add(new User(rs.getString("userId"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getString("email")));
-            }
-            return (User) users;
-        });
+        PreparedStatementSetter pss = (pstmt -> {});
 
-        return template.query("SELECT userId, password, name, email FROM USERS", mapper);
+        RowMapper<User> mapper = (rs ->
+                new User(rs.getString("userId"),
+                rs.getString("password"),
+                rs.getString("name"),
+                rs.getString("email")));
+
+        return template.query("SELECT userId, password, name, email FROM USERS", pss, mapper);
     }
 
     public User findByUserId(String userId) throws SQLException {
@@ -65,14 +64,11 @@ public class UserDao {
             pstmt.setString(1, userId);
         });
 
-        RowMapper<User> mapper = (rs -> {
-            User user = null;
-            if (rs.next()) {
-                user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                        rs.getString("email"));
-            }
-            return user;
-        });
+        RowMapper<User> mapper = (rs ->
+                new User(rs.getString("userId"),
+                        rs.getString("password"),
+                        rs.getString("name"),
+                        rs.getString("email")));
 
         return template.queryForObject("SELECT userId, password, name, email FROM USERS WHERE userid=?", setter, mapper);
     }
