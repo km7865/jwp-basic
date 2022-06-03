@@ -22,7 +22,7 @@
                           <img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
                       </div>
                       <div class="article-header-text">
-                          <a href="/users/92/kimmunsu" class="article-author-name">kimmunsu</a>
+                          <a href="/users/92/kimmunsu" class="article-author-name">${question.writer}</a>
                           <a href="/questions/413" class="article-header-time" title="퍼머링크">
                               ${question.createdDate}
                               <i class="icon-link"></i>
@@ -52,7 +52,7 @@
 
               <div class="qna-comment">
                   <div class="qna-comment-slipp">
-                      <p class="qna-comment-count"><strong>${answers.length}</strong>개의 의견</p>
+                      <p class="qna-comment-count"><strong>${length}</strong>개의 의견</p>
                       <div class="qna-comment-slipp-articles">
                           <c:forEach items="${answers}" var="answer" varStatus="status">
                               <article class="article" id=${answer.answerId}>
@@ -73,10 +73,10 @@
                                   <div class="article-util">
                                       <ul class="article-util-list">
                                           <li>
-                                              <a class="link-modify-article" href="/questions/${question.questionId}/answers/${answer.answerId}/form">수정</a>
+                                              <a class="link-modify-article" href="/answers/form?answerId=${answer.answerId}">수정</a>
                                           </li>
                                           <li>
-                                              <form class="form-delete" action="/questions/${question.questionId}/answers/${answer.answerId}" method="POST">
+                                              <form class="form-delete" action="/answers/delete?answerId=${answer.answerId}" method="POST">
                                                   <input type="hidden" name="_method" value="DELETE">
                                                   <button type="submit" class="link-delete-article">삭제</button>
                                               </form>
@@ -85,9 +85,9 @@
                                   </div>
                               </article>
                           </c:forEach>
-                          <form class="submit-write">
+                          <form class="submit-write" method="post" action="/answers/create">
                               <div class="form-group" style="padding:14px;">
-                                  <textarea class="form-control" placeholder="Update your status"></textarea>
+                                  <textarea class="form-control" id="contents" placeholder="Update your status"></textarea>
                               </div>
                               <button class="btn btn-success pull-right" type="button">Post</button>
                               <div class="clearfix" />

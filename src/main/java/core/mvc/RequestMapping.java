@@ -4,9 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import next.controller.*;
+import next.model.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/*
+ * /questions/show/{questionId} 와 같은 형태의 요청을 어떻게 받을지? GET 요청 URL show?questionId=# 와 같은 형식으로
+ *
+ */
 public class RequestMapping {
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     private Map<String, Controller> mappings = new HashMap<>();
@@ -25,7 +31,9 @@ public class RequestMapping {
 
         mappings.put("/questions/create", new CreateQuestionController());
         mappings.put("/questions/form", new QuestionFormController());
-        mappings.put("/questions/show", new ForwardController("/qna/show.jsp"));
+        mappings.put("/questions/show", new QuestionShowController());
+
+        mappings.put("/answers/delete", new AnswerController());
 
         logger.info("Initialized Request Mapping!");
     }

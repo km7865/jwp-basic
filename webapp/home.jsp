@@ -18,12 +18,12 @@
                         <div class="wrap">
                             <div class="main">
                                 <strong class="subject">
-                                    <a href="/questions/show/${question.questionId}">${question.title}</a>
+                                    <a href="/questions/show?questionId=${question.questionId}">${question.title}</a>
                                 </strong>
                                 <div class="auth-info">
                                     <i class="icon-add-comment"></i>
                                     <span class="time">${question.createdDate}</span>
-                                    <a href="/users/profile/${question.writer}" class="author">${question.writer}</a>
+                                    <a href="/users/profile?writer=${question.writer}" class="author">${question.writer}</a>
                                 </div>
                                 <div class="reply" title="댓글">
                                     <i class="icon-reply"></i>

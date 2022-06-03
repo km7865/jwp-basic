@@ -41,4 +41,16 @@ public class AnswerDaoTest {
         for (Answer a : answers) System.out.println(a.getAnswerId());
         assertEquals(expectedSize, answers.size());
     }
+
+    @Test
+    public void remove() {
+        int expectedSize = 4;
+        AnswerDao dao = new AnswerDao();
+        dao.remove(1L);
+
+        List<Answer> answers = new AnswerDao().findAll();
+
+        for (Answer a : answers) System.out.println(a.getAnswerId());
+        assertEquals(expectedSize, answers.size());
+    }
 }

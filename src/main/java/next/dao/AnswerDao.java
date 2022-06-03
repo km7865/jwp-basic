@@ -85,4 +85,11 @@ public class AnswerDao {
 
         return template.query("SELECT * FROM ANSWERS WHERE questionId=?", rm, pss);
     }
+
+    public void remove(Long answerId) {
+        JdbcTemplate template = new JdbcTemplate();
+        PreparedStatementSetter pss = (pstmt -> {pstmt.setObject(1, answerId);});
+
+        template.update("DELETE FROM ANSWERS WHERE answerId = ?", pss);
+    }
 }
