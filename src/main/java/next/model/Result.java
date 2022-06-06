@@ -8,7 +8,7 @@ public class Result {
         this(status, "");
     }
 
-    private Result(boolean status, String message) {
+    public Result(boolean status, String message) {
         this.status = status;
         this.message = message;
     }

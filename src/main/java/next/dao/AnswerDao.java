@@ -7,11 +7,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import core.jdbc.*;
 import next.model.Answer;
-import core.jdbc.JdbcTemplate;
-import core.jdbc.KeyHolder;
-import core.jdbc.PreparedStatementCreator;
-import core.jdbc.RowMapper;
 
 public class AnswerDao {
     public Answer insert(Answer answer) {
@@ -63,5 +60,13 @@ public class AnswerDao {
         };
 
         return jdbcTemplate.query(sql, rm, questionId);
+    }
+
+    public void remove(long answerId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "DELETE FROM ANSWERS WHERE answerId = ?";
+        PreparedStatementSetter pss = (pstmt -> {pstmt.setObject(1, answerId);});
+
+        jdbcTemplate.update(sql, pss);
     }
 }

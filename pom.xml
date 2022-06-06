@@ -11,7 +11,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-		<tomcat.version>8.0.15</tomcat.version>
+		<tomcat.version>10.0.21</tomcat.version>
 	</properties>
 
 	<dependencies>
@@ -23,17 +23,18 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- servlet -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- servlet -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -91,12 +92,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-logging-juli</artifactId>
 			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
