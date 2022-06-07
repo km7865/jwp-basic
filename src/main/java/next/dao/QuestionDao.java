@@ -7,16 +7,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import core.jdbc.JdbcTemplate;
-import core.jdbc.KeyHolder;
-import core.jdbc.PreparedStatementCreator;
-import core.jdbc.RowMapper;
+import core.jdbc.*;
 import next.model.Question;
 
 public class QuestionDao {
     public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String sql = "INSERT INTO QUESTIONS " + 
+        String sql = "INSERT INTO QUESTIONS " +
                 "(writer, title, contents, createdDate) " + 
                 " VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -32,12 +28,38 @@ public class QuestionDao {
         };
 
         KeyHolder keyHolder = new KeyHolder();
-        jdbcTemplate.update(psc, keyHolder);
+        JdbcTemplate.update(psc, keyHolder);
         return findById(keyHolder.getId());
+    }
+
+    public void update(Question question) {
+        String sql = "UPDATE QUESTIONS set title = ?, contents = ? WHERE questionId = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setParameters(PreparedStatement pstmt) throws SQLException {
+                pstmt.setObject(1, question.getTitle());
+                pstmt.setObject(2, question.getContents());
+                pstmt.setObject(3, question.getQuestionId());
+            }
+        };
+
+        JdbcTemplate.update(sql, pss);
+    }
+
+    public int addCountOfComment(Long questionId) {
+        String sql = "UPDATE QUESTIONS set countOfAnswer = countOfAnswer+1 WHERE questionId=?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setParameters(PreparedStatement pstmt) throws SQLException {
+                pstmt.setObject(1, questionId);
+            }
+        };
+
+        JdbcTemplate.update(sql, pss);
+        return findById(questionId).getCountOfComment();
     }
     
     public List<Question> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
                 + "order by questionId desc";
 
@@ -50,11 +72,10 @@ public class QuestionDao {
 
         };
 
-        return jdbcTemplate.query(sql, rm);
+        return JdbcTemplate.query(sql, rm);
     }
 
     public Question findById(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS "
                 + "WHERE questionId = ?";
 
@@ -66,6 +87,15 @@ public class QuestionDao {
             }
         };
 
-        return jdbcTemplate.queryForObject(sql, rm, questionId);
+        return JdbcTemplate.queryForObject(sql, rm, questionId);
+    }
+
+    public void remove(Long questionId) {
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
+        PreparedStatementSetter pss = (pstmt -> {
+            pstmt.setObject(1, questionId);
+        });
+
+        JdbcTemplate.update(sql, pss);
     }
 }

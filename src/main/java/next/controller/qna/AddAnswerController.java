@@ -1,8 +1,10 @@
 package next.controller.qna;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import core.mvc.JsonView;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import next.dao.QuestionDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,10 @@ public class AddAnswerController extends AbstractController {
         log.debug("answer : {}", answer);
 
         Answer savedAnswer = answerDao.insert(answer);
-        return jsonView().addObject("answer", savedAnswer);
+        ModelAndView mav = jsonView().addObject("answer", savedAnswer);
+        int countOfComment = new QuestionDao().addCountOfComment(Long.valueOf(req.getParameter("questionId")));
+        mav.addObject("countOfComment", countOfComment);
+        log.debug("countOfComment: {}", countOfComment);
+        return mav;
     }
 }

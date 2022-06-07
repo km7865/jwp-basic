@@ -16,15 +16,40 @@ function addAnswer(e) {
   });
 }
 
+function onError(xhr, status) {
+  alert("error");
+}
+
 function onSuccess(json, status){
   var answer = json.answer;
   var answerTemplate = $("#answerTemplate").html();
   var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
+  $("#qna-comment-count").text(json.countOfComment + ' 개의 의견')
   $(".qna-comment-slipp-articles").prepend(template);
 }
 
-function onError(xhr, status) {
-  alert("error");
+$(".qna-comment").on("click", ".form-delete", deleteAnswer);
+
+function deleteAnswer(e) {
+  e.preventDefault();
+
+  var deleteBtn = $(this);
+  var queryString = deleteBtn.closest("form").serialize();
+  console.log("qs : " + queryString);
+
+    $.ajax({
+      type : 'post',
+      url : '/api/qna/deleteAnswer',
+      data : queryString,
+      dataType : 'json',
+      error: onError,
+      success : function(json, status) {
+        var result = json.result;
+        if (result.status) {
+            deleteBtn.closest('article').remove();
+        }
+      }
+    });
 }
 
 String.prototype.format = function() {
