@@ -3,10 +3,12 @@ package next.view;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class JspView implements View {
     private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
     private String viewName;
@@ -28,6 +30,7 @@ public class JspView implements View {
         Set<String> keys = model.keySet();
         for (String key : keys) {
             req.setAttribute(key, model.get(key));
+            log.debug("model.get: {}", model.get(key));
         }
 
         RequestDispatcher rd = req.getRequestDispatcher(viewName);
