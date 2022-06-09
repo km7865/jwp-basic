@@ -17,6 +17,7 @@
 				<h2 class="qna-title">${question.title}</h2>
 				<form class="form-delete" action="/qna/updateForm" method="get">
                     <input type="hidden" name="questionId" value="${question.questionId}">
+                    <input type="hidden" name="writer" value="${question.writer}">
                     <button type="submit" class="link-update-question">수정</button>
                 </form>
 				<form class="form-delete" action="/qna/delete" method="post">

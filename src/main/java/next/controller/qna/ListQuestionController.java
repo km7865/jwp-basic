@@ -12,7 +12,7 @@ import java.util.List;
 public class ListQuestionController extends AbstractController {
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<Question> questions = new QuestionDao().findAll();
+        List<Question> questions = QuestionDao.getInstance().findAll();
 
         return jsonView().addObject("questions", questions);
     }

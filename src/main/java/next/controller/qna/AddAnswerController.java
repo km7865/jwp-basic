@@ -16,7 +16,7 @@ import next.model.Answer;
 public class AddAnswerController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(AddAnswerController.class);
 
-    private AnswerDao answerDao = new AnswerDao();
+    private AnswerDao answerDao = AnswerDao.getInstance();
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse response) throws Exception {
@@ -26,7 +26,7 @@ public class AddAnswerController extends AbstractController {
 
         Answer savedAnswer = answerDao.insert(answer);
         ModelAndView mav = jsonView().addObject("answer", savedAnswer);
-        int countOfComment = new QuestionDao().addCountOfComment(Long.valueOf(req.getParameter("questionId")));
+        int countOfComment = QuestionDao.getInstance().addCountOfComment(Long.valueOf(req.getParameter("questionId")));
         mav.addObject("countOfComment", countOfComment);
         log.debug("countOfComment: {}", countOfComment);
         return mav;

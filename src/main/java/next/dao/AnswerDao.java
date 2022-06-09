@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import next.model.Answer;
 import core.jdbc.JdbcTemplate;
 import core.jdbc.KeyHolder;
 import core.jdbc.PreparedStatementCreator;
 import core.jdbc.RowMapper;
 
+@Slf4j
 public class AnswerDao {
     private static AnswerDao answerDao;
 
@@ -77,6 +79,8 @@ public class AnswerDao {
 
     public void delete(Long answerId) {
         String sql = "DELETE FROM ANSWERS WHERE answerId = ?";
+        log.debug("answerId: {}", answerId);
+
         JdbcTemplate.getInstance().update(sql, answerId);
     }
 }

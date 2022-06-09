@@ -21,7 +21,7 @@ public class CreateQuestionController extends AbstractController {
                 request.getParameter("title"),
                 request.getParameter("contents"));
 
-        QuestionDao dao = new QuestionDao();
+        QuestionDao dao = QuestionDao.getInstance();
         Question createdQuestion = dao.insert(question);
 
         return jspView("redirect:/");

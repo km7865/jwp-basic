@@ -102,7 +102,7 @@ public class QuestionDao {
         return JdbcTemplate.getInstance().queryForObject(sql, rm, questionId);
     }
 
-    public void remove(Long questionId) {
+    public void delete(Long questionId) {
         String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
         PreparedStatementSetter pss = (pstmt -> {
             pstmt.setObject(1, questionId);

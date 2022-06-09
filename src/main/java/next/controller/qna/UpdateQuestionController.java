@@ -18,7 +18,7 @@ public class UpdateQuestionController extends AbstractController {
                 request.getParameter("title"),
                 request.getParameter("contents"));
         log.debug("Update Question: {}", question);
-        new QuestionDao().update(question);
+        QuestionDao.getInstance().update(question);
 
         return jspView("redirect:/");
     }
