@@ -14,6 +14,8 @@
 * DispatcherServlet
 * @WebServlet 어노테이션으로 일단 모든 URL 에 해당 클래스가 service 할 수 있게 설정한다.
 * RequestMapping 객체를 생성하고 Client Request 에 대응할 수 있도록 URI 와 Controller 를 매핑시켜 놓는다.
+* 
+* 
 
 #### 2. Tomcat 서버를 시작한 후 http://localhost:8080으로 접근시 소스코드의 호출 순서 및 흐름을 설명하라.
 * ResourceFilter.doFilter() 

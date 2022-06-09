@@ -11,6 +11,18 @@ import core.jdbc.*;
 import next.model.Question;
 
 public class QuestionDao {
+    private static QuestionDao questionDao;
+
+    private QuestionDao() {}
+
+    public static QuestionDao getInstance() {
+        if (questionDao == null) {
+            questionDao = new QuestionDao();
+        }
+
+        return questionDao;
+    }
+
     public Question insert(Question question) {
         String sql = "INSERT INTO QUESTIONS " +
                 "(writer, title, contents, createdDate) " + 
@@ -28,7 +40,7 @@ public class QuestionDao {
         };
 
         KeyHolder keyHolder = new KeyHolder();
-        JdbcTemplate.update(psc, keyHolder);
+        JdbcTemplate.getInstance().update(psc, keyHolder);
         return findById(keyHolder.getId());
     }
 
@@ -43,7 +55,7 @@ public class QuestionDao {
             }
         };
 
-        JdbcTemplate.update(sql, pss);
+        JdbcTemplate.getInstance().update(sql, pss);
     }
 
     public int addCountOfComment(Long questionId) {
@@ -55,7 +67,7 @@ public class QuestionDao {
             }
         };
 
-        JdbcTemplate.update(sql, pss);
+        JdbcTemplate.getInstance().update(sql, pss);
         return findById(questionId).getCountOfComment();
     }
     
@@ -72,7 +84,7 @@ public class QuestionDao {
 
         };
 
-        return JdbcTemplate.query(sql, rm);
+        return JdbcTemplate.getInstance().query(sql, rm);
     }
 
     public Question findById(long questionId) {
@@ -87,7 +99,7 @@ public class QuestionDao {
             }
         };
 
-        return JdbcTemplate.queryForObject(sql, rm, questionId);
+        return JdbcTemplate.getInstance().queryForObject(sql, rm, questionId);
     }
 
     public void remove(Long questionId) {
@@ -96,6 +108,6 @@ public class QuestionDao {
             pstmt.setObject(1, questionId);
         });
 
-        JdbcTemplate.update(sql, pss);
+        JdbcTemplate.getInstance().update(sql, pss);
     }
 }

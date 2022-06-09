@@ -14,6 +14,18 @@ import core.jdbc.PreparedStatementCreator;
 import core.jdbc.RowMapper;
 
 public class AnswerDao {
+    private static AnswerDao answerDao;
+
+    private AnswerDao() {}
+
+    public static AnswerDao getInstance() {
+        if (answerDao == null) {
+            answerDao = new AnswerDao();
+        }
+
+        return answerDao;
+    }
+
     public Answer insert(Answer answer) {
         String sql = "INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -29,7 +41,7 @@ public class AnswerDao {
         };
 
         KeyHolder keyHolder = new KeyHolder();
-        JdbcTemplate.update(psc, keyHolder);
+        JdbcTemplate.getInstance().update(psc, keyHolder);
         return findById(keyHolder.getId());
     }
 
@@ -45,7 +57,7 @@ public class AnswerDao {
             }
         };
 
-        return JdbcTemplate.queryForObject(sql, rm, answerId);
+        return JdbcTemplate.getInstance().queryForObject(sql, rm, answerId);
     }
 
     public List<Answer> findAllByQuestionId(long questionId) {
@@ -60,12 +72,11 @@ public class AnswerDao {
             }
         };
 
-        return JdbcTemplate.query(sql, rm, questionId);
+        return JdbcTemplate.getInstance().query(sql, rm, questionId);
     }
 
     public void delete(Long answerId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "DELETE FROM ANSWERS WHERE answerId = ?";
-        JdbcTemplate.update(sql, answerId);
+        JdbcTemplate.getInstance().update(sql, answerId);
     }
 }
