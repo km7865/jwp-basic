@@ -1,6 +1,6 @@
 package next.controller;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import next.model.User;
 

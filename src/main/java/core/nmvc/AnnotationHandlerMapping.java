@@ -1,29 +1,63 @@
 package core.nmvc;
 
+import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import core.annotation.RequestMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.google.common.collect.Maps;
 
 import core.annotation.RequestMethod;
+import lombok.extern.slf4j.Slf4j;
+import org.reflections.ReflectionUtils;
 
+@Slf4j
 public class AnnotationHandlerMapping {
     private Object[] basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
+    private ControllerScanner cs = new ControllerScanner();
 
     public AnnotationHandlerMapping(Object... basePackage) {
         this.basePackage = basePackage;
     }
 
     public void initialize() {
+        /*
+         * next.controller.Controller 들의 method 와 url 을 매핑하자
+         * ControllerScanner 를 통해 @Controller 어노테이션이 적용된 클래스 찾아 Map<Classs<?>, Object> 형태로 저장
+         * 저장된 클래스 리스트를 순회하며 @RequestMapping 어노테이션이 적용된 메서드 찾기
+         * 찾은 메서드로 RequestMapping 의 value, http_method 를 짝으로 HandlerKey 인스턴스 생성
+         * HandlerExecution(Method, Object) 생성
+         * HandlerKey, HandlerExecution 맵에 저장함으로써 매핑 완료
+         */
 
+        for (Object o : basePackage) {
+            cs.init((String) o);
+        }
+
+        Map<Class<?>, Object> controllers = cs.getControllers();
+        for (Class<?> clazz : controllers.keySet()) {
+            Set<Method> methods = ReflectionUtils.getAllMethods(clazz, ReflectionUtils.withAnnotation(RequestMapping.class));
+
+            for (Method m : methods) {
+                RequestMapping rm = m.getAnnotation(RequestMapping.class);
+                HandlerKey handlerKey = createHandlerKey(rm);
+                log.debug("handlerKey: {}", handlerKey);
+                handlerExecutions.put(handlerKey, new HandlerExecution(m, controllers.get(clazz)));
+            }
+        }
     }
 
     public HandlerExecution getHandler(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         RequestMethod rm = RequestMethod.valueOf(request.getMethod().toUpperCase());
         return handlerExecutions.get(new HandlerKey(requestUri, rm));
+    }
+
+    private HandlerKey createHandlerKey(RequestMapping rm) {
+        return new HandlerKey(rm.value(), rm.method());
     }
 }
