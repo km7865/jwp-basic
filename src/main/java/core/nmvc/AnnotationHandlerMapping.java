@@ -1,9 +1,11 @@
 package core.nmvc;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import core.HandlerMapping;
 import core.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -14,11 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.reflections.ReflectionUtils;
 
 @Slf4j
-public class AnnotationHandlerMapping {
+public class AnnotationHandlerMapping implements HandlerMapping {
     private Object[] basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
-    private ControllerScanner cs = new ControllerScanner();
+    private ControllerScanner cs;
 
     public AnnotationHandlerMapping(Object... basePackage) {
         this.basePackage = basePackage;
@@ -34,23 +36,28 @@ public class AnnotationHandlerMapping {
          * HandlerKey, HandlerExecution 맵에 저장함으로써 매핑 완료
          */
 
-        for (Object o : basePackage) {
-            cs.init((String) o);
-        }
+        cs = new ControllerScanner(basePackage);
 
         Map<Class<?>, Object> controllers = cs.getControllers();
-        for (Class<?> clazz : controllers.keySet()) {
-            Set<Method> methods = ReflectionUtils.getAllMethods(clazz, ReflectionUtils.withAnnotation(RequestMapping.class));
-
-            for (Method m : methods) {
-                RequestMapping rm = m.getAnnotation(RequestMapping.class);
-                HandlerKey handlerKey = createHandlerKey(rm);
-                log.debug("handlerKey: {}", handlerKey);
-                handlerExecutions.put(handlerKey, new HandlerExecution(m, controllers.get(clazz)));
-            }
+        Set<Method> methods = getRequestMethods(controllers.keySet());
+        for (Method m : methods) {
+            RequestMapping rm = m.getAnnotation(RequestMapping.class);
+            HandlerKey handlerKey = createHandlerKey(rm);
+            log.debug("handlerKey: {}", handlerKey);
+            handlerExecutions.put(handlerKey, new HandlerExecution(m, controllers.get(m.getDeclaringClass())));
         }
     }
 
+    private Set<Method> getRequestMethods(Set<Class<?>> classes) {
+        Set<Method> methods = new HashSet<>();
+        for (Class<?> clazz : classes) {
+            methods.addAll(ReflectionUtils.getAllMethods(clazz, ReflectionUtils.withAnnotation(RequestMapping.class)));
+        }
+
+        return methods;
+    }
+
+    @Override
     public HandlerExecution getHandler(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         RequestMethod rm = RequestMethod.valueOf(request.getMethod().toUpperCase());

@@ -4,10 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import core.mvc.ModelAndView;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
 
+@Slf4j
 public class HandlerExecution {
     private Method method;
     private Object instance;
@@ -18,6 +19,11 @@ public class HandlerExecution {
     }
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return (ModelAndView) method.invoke(instance, request, response);
+        try {
+            return (ModelAndView) method.invoke(instance, request, response);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            log.error("{} method invoke fail. error message : {}", method.getName(), e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }
