@@ -27,7 +27,7 @@ public class AnswerDaoTest {
     public void addAnswer() throws Exception {
         long questionId = 1L;
         Answer expected = new Answer("javajigi", "answer contents", questionId);
-        AnswerRepository dut = new JdbcAnswerRepository(new JdbcTemplate());
+        AnswerRepository dut = new JdbcAnswerRepository();
         Answer answer = dut.insert(expected);
         log.debug("Answer : {}", answer);
     }

@@ -23,7 +23,7 @@ public class UserDaoTest {
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
-        UserRepository userRepository = new UserRepository(new JdbcTemplate());
+        UserRepository userRepository = new UserRepository();
         userRepository.insert(expected);
 
         User actual = userRepository.findByUserId(expected.getUserId());

@@ -20,7 +20,7 @@ public class AnnotationHandlerMapping implements HandlerMapping {
     private Object[] basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
-    private ControllerScanner cs;
+    private BeanScanner bs;
 
     public AnnotationHandlerMapping(Object... basePackage) {
         this.basePackage = basePackage;
@@ -39,9 +39,9 @@ public class AnnotationHandlerMapping implements HandlerMapping {
          *
          */
 
-        cs = new ControllerScanner(basePackage);
+        bs = new BeanScanner(basePackage);
 
-        Map<Class<?>, Object> controllers = cs.getControllers();
+        Map<Class<?>, Object> controllers = bs.getBeans();
         Set<Method> methods = getRequestMethods(controllers.keySet());
         for (Method m : methods) {
             RequestMapping rm = m.getAnnotation(RequestMapping.class);

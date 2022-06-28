@@ -11,11 +11,7 @@ import core.jdbc.RowMapper;
 
 @Repository
 public class UserRepository {
-    private JdbcTemplate jdbcTemplate;
-
-    public UserRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     public void insert(User user) {
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";

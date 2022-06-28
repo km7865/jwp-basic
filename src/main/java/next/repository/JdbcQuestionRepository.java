@@ -16,11 +16,7 @@ import core.jdbc.RowMapper;
 
 @Repository
 public class JdbcQuestionRepository implements QuestionRepository {
-    private JdbcTemplate jdbcTemplate;
-
-    public JdbcQuestionRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     public Question insert(Question question) {
         String sql = "INSERT INTO QUESTIONS (writer, title, contents, createdDate) VALUES (?, ?, ?, ?)";

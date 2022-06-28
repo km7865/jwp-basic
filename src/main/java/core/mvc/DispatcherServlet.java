@@ -5,13 +5,16 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import core.HandlerMapping;
+import core.di.factory.BeanFactory;
 import core.nmvc.AnnotationHandlerMapping;
+import core.nmvc.BeanScanner;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +32,7 @@ public class DispatcherServlet extends HttpServlet {
         LegacyHandlerMapping lhm = new LegacyHandlerMapping();
         lhm.initMapping();
 
-        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("next.controller");
+        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("next");
         ahm.initialize();
 
         mappings.add(lhm);

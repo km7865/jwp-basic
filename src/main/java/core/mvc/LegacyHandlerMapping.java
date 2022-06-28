@@ -17,7 +17,7 @@ public class LegacyHandlerMapping implements HandlerMapping {
     private Map<String, Controller> mappings = new HashMap<>();
 
     void initMapping() {
-        mappings.put("/", new HomeController(new JdbcQuestionRepository(new JdbcTemplate())));
+        // mappings.put("/", new HomeController(new JdbcQuestionRepository(new JdbcTemplate())));
 //        mappings.put("/users/form", new ForwardController("/user/form.jsp"));
 //        mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
 //        mappings.put("/users", new ListUserController());
