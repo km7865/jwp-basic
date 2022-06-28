@@ -1,25 +1,20 @@
-package next.dao;
+package next.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import core.annotation.Repository;
 import next.model.User;
 import core.jdbc.JdbcTemplate;
 import core.jdbc.RowMapper;
 
-public class UserDao {
-    private static UserDao userDao;
-    private JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+@Repository
+public class UserRepository {
+    private JdbcTemplate jdbcTemplate;
 
-    private UserDao() {
-    }
-
-    public static UserDao getInstance() {
-        if (userDao == null) {
-            userDao = new UserDao();
-        }
-        return userDao;
+    public UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void insert(User user) {

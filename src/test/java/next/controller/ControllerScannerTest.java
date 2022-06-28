@@ -2,8 +2,8 @@ package next.controller;
 
 import core.nmvc.ControllerScanner;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 public class ControllerScannerTest {
     private ControllerScanner cs;
 
-    @Before
+    @BeforeAll
     public void setup() {
         cs = new ControllerScanner("next.controller");
     }

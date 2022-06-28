@@ -1,9 +1,8 @@
-package next.dao;
+package next.repository;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import core.jdbc.JdbcTemplate;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -11,8 +10,10 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import core.jdbc.ConnectionManager;
 import next.model.User;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class UserDaoTest {
-    @Before
+    @BeforeAll
     public void setup() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("jwp.sql"));
@@ -22,10 +23,10 @@ public class UserDaoTest {
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
-        UserDao userDao = UserDao.getInstance();
-        userDao.insert(expected);
+        UserRepository userRepository = new UserRepository(new JdbcTemplate());
+        userRepository.insert(expected);
 
-        User actual = userDao.findByUserId(expected.getUserId());
+        User actual = userRepository.findByUserId(expected.getUserId());
         assertEquals(expected, actual);
     }
 

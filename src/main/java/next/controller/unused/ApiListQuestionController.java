@@ -1,17 +1,21 @@
-package next.controller.qna;
+package next.controller.unused;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
-import next.dao.QuestionDao;
+import next.repository.QuestionRepository;
 
 public class ApiListQuestionController extends AbstractController {
-    private QuestionDao questionDao = QuestionDao.getInstance();
+    private QuestionRepository questionRepository;
+
+    public ApiListQuestionController(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        return jsonView().addObject("questions", questionDao.findAll());
+        return jsonView().addObject("questions", questionRepository.findAll());
     }
 }

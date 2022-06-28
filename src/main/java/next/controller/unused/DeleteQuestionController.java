@@ -1,4 +1,4 @@
-package next.controller.qna;
+package next.controller.unused;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +10,11 @@ import next.controller.UserSessionUtils;
 import next.service.QnaService;
 
 public class DeleteQuestionController extends AbstractController {
-    private QnaService qnaService = QnaService.getInstance();
+    private QnaService qnaService;
+
+    public DeleteQuestionController(QnaService qnaService) {
+        this.qnaService = qnaService;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {

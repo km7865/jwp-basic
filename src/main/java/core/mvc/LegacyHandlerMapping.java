@@ -4,35 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import core.HandlerMapping;
+import core.jdbc.JdbcTemplate;
 import jakarta.servlet.http.HttpServletRequest;
+import next.repository.JdbcQuestionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import next.controller.HomeController;
-import next.controller.qna.AddAnswerController;
-import next.controller.qna.ApiDeleteQuestionController;
-import next.controller.qna.ApiListQuestionController;
-import next.controller.qna.CreateFormQuestionController;
-import next.controller.qna.CreateQuestionController;
-import next.controller.qna.DeleteAnswerController;
-import next.controller.qna.DeleteQuestionController;
-import next.controller.qna.ShowQuestionController;
-import next.controller.qna.UpdateFormQuestionController;
-import next.controller.qna.UpdateQuestionController;
-import next.controller.user.CreateUserController;
-import next.controller.user.ListUserController;
-import next.controller.user.LoginController;
-import next.controller.user.LogoutController;
-import next.controller.user.ProfileController;
-import next.controller.user.UpdateFormUserController;
-import next.controller.user.UpdateUserController;
 
 public class LegacyHandlerMapping implements HandlerMapping {
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     private Map<String, Controller> mappings = new HashMap<>();
 
     void initMapping() {
-        //mappings.put("/", new HomeController());
+        mappings.put("/", new HomeController(new JdbcQuestionRepository(new JdbcTemplate())));
 //        mappings.put("/users/form", new ForwardController("/user/form.jsp"));
 //        mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
 //        mappings.put("/users", new ListUserController());

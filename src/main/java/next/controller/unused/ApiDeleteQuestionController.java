@@ -1,4 +1,4 @@
-package next.controller.qna;
+package next.controller.unused;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +11,11 @@ import next.model.Result;
 import next.service.QnaService;
 
 public class ApiDeleteQuestionController extends AbstractController {
-    private QnaService qnaService = QnaService.getInstance();
+    private QnaService qnaService;
+
+    public ApiDeleteQuestionController(QnaService qnaService) {
+        this.qnaService = qnaService;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {

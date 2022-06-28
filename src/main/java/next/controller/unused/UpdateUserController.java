@@ -1,10 +1,10 @@
-package next.controller.user;
+package next.controller.unused;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import next.controller.UserSessionUtils;
-import next.dao.UserDao;
+import next.repository.UserRepository;
 import next.model.User;
 
 import org.slf4j.Logger;
@@ -15,11 +15,15 @@ import core.mvc.ModelAndView;
 
 public class UpdateUserController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(UpdateUserController.class);
-    private UserDao userDao = UserDao.getInstance();
+    private UserRepository userRepository;
+
+    public UpdateUserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse response) throws Exception {
-        User user = userDao.findByUserId(req.getParameter("userId"));
+        User user = userRepository.findByUserId(req.getParameter("userId"));
 
         if (!UserSessionUtils.isSameUser(req.getSession(), user)) {
             throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");

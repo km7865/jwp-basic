@@ -1,15 +1,19 @@
-package next.controller.user;
+package next.controller.unused;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import next.controller.UserSessionUtils;
-import next.dao.UserDao;
+import next.repository.UserRepository;
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 
 public class ListUserController extends AbstractController {
-    private UserDao userDao = UserDao.getInstance();
+    private UserRepository userRepository;
+
+    public ListUserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -18,7 +22,7 @@ public class ListUserController extends AbstractController {
         }
 
         ModelAndView mav = jspView("/user/list.jsp");
-        mav.addObject("users", userDao.findAll());
+        mav.addObject("users", userRepository.findAll());
         return mav;
     }
 }

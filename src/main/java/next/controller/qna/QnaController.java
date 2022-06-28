@@ -1,10 +1,10 @@
 package next.controller.qna;
 
 import core.annotation.Controller;
+import core.annotation.Inject;
 import core.annotation.RequestMapping;
 import core.annotation.RequestMethod;
 import core.jdbc.DataAccessException;
-import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 import core.mvc.NewAbstractController;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import next.CannotDeleteException;
 import next.controller.UserSessionUtils;
-import next.dao.AnswerDao;
-import next.dao.QuestionDao;
+import next.repository.AnswerRepository;
+import next.repository.QuestionRepository;
 import next.model.Answer;
 import next.model.Question;
 import next.model.Result;
@@ -25,16 +25,23 @@ import java.util.List;
 @Slf4j
 @Controller
 public class QnaController extends NewAbstractController {
-    private QuestionDao questionDao = QuestionDao.getInstance();
-    private QnaService qnaService = QnaService.getInstance();
-    private AnswerDao answerDao = AnswerDao.getInstance();
+    private QuestionRepository questionRepository;
+    private AnswerRepository answerRepository;
+    private QnaService qnaService;
+
+    @Inject
+    public QnaController(QuestionRepository questionRepository, AnswerRepository answerRepository, QnaService qnaService) {
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
+        this.qnaService = qnaService;
+    }
 
     @RequestMapping(value = "/qna/show", method = RequestMethod.GET)
     public ModelAndView show(HttpServletRequest req, HttpServletResponse resp) {
         long questionId = Long.parseLong(req.getParameter("questionId"));
 
-        Question question = questionDao.findById(questionId);
-        List<Answer> answers = answerDao.findAllByQuestionId(questionId);
+        Question question = questionRepository.findById(questionId);
+        List<Answer> answers = answerRepository.findAllByQuestionId(questionId);
 
         ModelAndView mav = jspView("/qna/show.jsp");
         mav.addObject("question", question);
@@ -58,7 +65,7 @@ public class QnaController extends NewAbstractController {
         User user = UserSessionUtils.getUserFromSession(req.getSession());
         Question question = new Question(user.getUserId(), req.getParameter("title"),
                 req.getParameter("contents"));
-        questionDao.insert(question);
+        questionRepository.insert(question);
         return jspView("redirect:/");
     }
 
@@ -69,7 +76,7 @@ public class QnaController extends NewAbstractController {
         }
 
         long questionId = Long.parseLong(req.getParameter("questionId"));
-        Question question = questionDao.findById(questionId);
+        Question question = questionRepository.findById(questionId);
         if (!question.isSameUser(UserSessionUtils.getUserFromSession(req.getSession()))) {
             throw new IllegalStateException("다른 사용자가 쓴 글을 수정할 수 없습니다.");
         }
@@ -83,7 +90,7 @@ public class QnaController extends NewAbstractController {
         }
 
         long questionId = Long.parseLong(req.getParameter("questionId"));
-        Question question = questionDao.findById(questionId);
+        Question question = questionRepository.findById(questionId);
         if (!question.isSameUser(UserSessionUtils.getUserFromSession(req.getSession()))) {
             throw new IllegalStateException("다른 사용자가 쓴 글을 수정할 수 없습니다.");
         }
@@ -91,7 +98,7 @@ public class QnaController extends NewAbstractController {
         Question newQuestion = new Question(question.getWriter(), req.getParameter("title"),
                 req.getParameter("contents"));
         question.update(newQuestion);
-        questionDao.update(question);
+        questionRepository.update(question);
         return jspView("redirect:/");
     }
 
@@ -129,7 +136,7 @@ public class QnaController extends NewAbstractController {
 
     @RequestMapping(value = "/api/qna/list", method = RequestMethod.GET)
     public ModelAndView apiList(HttpServletRequest req, HttpServletResponse resp) {
-        return jsonView().addObject("questions", questionDao.findAll());
+        return jsonView().addObject("questions", questionRepository.findAll());
     }
 
     @RequestMapping(value = "/api/qna/addAnswer", method = RequestMethod.POST)
@@ -143,8 +150,8 @@ public class QnaController extends NewAbstractController {
                 Long.parseLong(req.getParameter("questionId")));
         log.debug("answer : {}", answer);
 
-        Answer savedAnswer = answerDao.insert(answer);
-        questionDao.updateCountOfAnswer(savedAnswer.getQuestionId());
+        Answer savedAnswer = answerRepository.insert(answer);
+        questionRepository.updateCountOfAnswer(savedAnswer.getQuestionId());
 
         return jsonView().addObject("answer", savedAnswer).addObject("result", Result.ok());
     }
@@ -155,7 +162,7 @@ public class QnaController extends NewAbstractController {
 
         ModelAndView mav = jsonView();
         try {
-            answerDao.delete(answerId);
+            answerRepository.delete(answerId);
             mav.addObject("result", Result.ok());
         } catch (DataAccessException e) {
             mav.addObject("result", Result.fail(e.getMessage()));

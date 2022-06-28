@@ -34,6 +34,9 @@ public class AnnotationHandlerMapping implements HandlerMapping {
          * 찾은 메서드로 RequestMapping 의 value, http_method 를 짝으로 HandlerKey 인스턴스 생성
          * HandlerExecution(Method, Object) 생성
          * HandlerKey, HandlerExecution 맵에 저장함으로써 매핑 완료
+         *
+         * DI(의존성 주입) Framework 로 변경하게 되면 정상적으로 작동할 수 없기 때문에 DI를 해줘야함
+         *
          */
 
         cs = new ControllerScanner(basePackage);

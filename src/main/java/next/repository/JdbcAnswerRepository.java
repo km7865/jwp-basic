@@ -1,4 +1,4 @@
-package next.dao;
+package next.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,24 +7,19 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import core.annotation.Repository;
 import next.model.Answer;
 import core.jdbc.JdbcTemplate;
 import core.jdbc.KeyHolder;
 import core.jdbc.PreparedStatementCreator;
 import core.jdbc.RowMapper;
 
-public class AnswerDao {
-    private static AnswerDao answerDao;
-    private JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+@Repository
+public class JdbcAnswerRepository implements AnswerRepository {
+    private JdbcTemplate jdbcTemplate;
 
-    private AnswerDao() {
-    }
-
-    public static AnswerDao getInstance() {
-        if (answerDao == null) {
-            answerDao = new AnswerDao();
-        }
-        return answerDao;
+    public JdbcAnswerRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Answer insert(Answer answer) {
